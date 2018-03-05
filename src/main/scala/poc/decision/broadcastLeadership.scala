@@ -2,22 +2,27 @@ package poc.decision
 
 import java.util.Calendar
 
-import poc.modifier.{Leader, Modifier}
+import poc.actor.Actor
+import poc.message.LeaderOccurrence
+import poc.modifier.Leader
 
-import scala.collection.mutable.ListBuffer
+trait broadcastLeadership extends Actor {
 
-trait broadcastLeadership {
-  protected val modifiers: ListBuffer[Modifier]
-
-  def broadcastLeadership = {
+  def broadcastLeadership: Boolean = {
     val leader = modifiers.collect { case a: Leader => a }.head
     if (leader.lastBroadcastTime + leader.expirationTime < Calendar.getInstance().getTime.getTime) {
       for (actor <- poc.Map.buff) {
-        actor match {
-          case leader.actorClass => 1
+        print(actor.getClass, leader.actorClass)
+        actor.getClass match {
+          case leader.actorClass =>
+            //            print("ala")
+            actor ! new LeaderOccurrence(this, leader.lastBroadcastTime, leader.expirationTime)
+          case _ => ""
         }
-//        if (actor.isInstanceOf[leader.actorClass]) {}
       }
+      true
+    } else {
+      false
     }
   }
 

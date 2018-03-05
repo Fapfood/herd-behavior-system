@@ -4,9 +4,9 @@ import java.util.Calendar
 
 import akka.actor.Props
 import poc.Map
-import poc.modifier.{Leader, Modifier}
-
-import scala.collection.mutable.ListBuffer
+import poc.decision.broadcastLeadership
+import poc.message.{DecisionTime, LeaderOccurrence, LeaderRising, ShareModifiers}
+import poc.modifier.{Follower, Leader}
 
 object Ant {
 
@@ -14,13 +14,29 @@ object Ant {
 
 }
 
-
-class Ant(val map: Map, var x: Int, var y: Int) extends Actor {
-
-  protected val modifiers: ListBuffer[Modifier] = scala.collection.mutable.ListBuffer.empty[Modifier]
+class Ant(val map: Map, var x: Int, var y: Int) extends Actor with broadcastLeadership {
 
   override def receive: Receive = {
-    case l: List[Int] => System.out.println(l.head)
+    case leaderRising: LeaderRising =>
+      val leader = new Leader(leaderRising.expirationTime, leaderRising.actorClass)
+      leader.lastBroadcastTime = Calendar.getInstance().getTime.getTime
+      modifiers += leader
+      print("leaderRising")
+    case leaderOccurrence: LeaderOccurrence =>
+      val follower = new Follower(leaderOccurrence.expirationTime, leaderOccurrence.leader)
+      follower.lastBroadcastTime = Calendar.getInstance().getTime.getTime
+      modifiers += follower
+      print("leaderOccurrence")
+    case decisionTime: DecisionTime =>
+      this.decide
+    //      print("decisionTime")
+    case shareModifiers: ShareModifiers =>
+      sender() !
+  }
+
+  def decide: Unit = {
+    this.broadcastLeadership
+    self ! new DecisionTime
   }
 
 }
