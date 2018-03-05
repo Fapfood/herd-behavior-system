@@ -1,5 +1,7 @@
 package poc.modifier
 
-import poc.Ant
+import poc.actor.Actor
 
-class Follower(val ant: Ant)
+class Follower(val expirationTime: Long, val actor: Actor) {
+  var lastBroadcastTime: Long = 0
+}

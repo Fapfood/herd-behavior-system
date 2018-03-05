@@ -1,7 +1,7 @@
 package poc.modifier
 
-import java.util.{Calendar, Date}
+import poc.actor.Actor
 
-class Leader extends Modifier {
-  var broadcastTime: Date = Calendar.getInstance().getTime
+class Leader(val expirationTime: Long, val actorClass: Class[_ <: Actor]) extends Modifier {
+  var lastBroadcastTime: Long = 0
 }

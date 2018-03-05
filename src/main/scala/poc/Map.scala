@@ -1,10 +1,17 @@
 package poc
 
-object Map
+import akka.actor.ActorRef
+
+import scala.collection.mutable.ListBuffer
+
+object Map {
+
+  val buff: ListBuffer[ActorRef] = scala.collection.mutable.ListBuffer.empty[ActorRef]
+
+}
 
 class Map() {
-  private val buf = scala.collection.mutable.ListBuffer.empty[Ant]
 
-  def addAnt(ant: Ant): Unit = buf += ant
+  def add(actor: ActorRef): Unit = Map.buff += actor
 
 }

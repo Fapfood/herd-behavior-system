@@ -1,5 +1,7 @@
+import java.util.Calendar
+
 import akka.actor.{ActorRef, ActorSystem}
-import poc.Ant
+import poc.actor.Ant
 
 
 object AkkaQuickstart extends App {
@@ -11,5 +13,7 @@ object AkkaQuickstart extends App {
   val ant: ActorRef = system.actorOf(Ant.props(map, 0, 0), "ant-1")
 
   ant ! List(2, 3)
+
+  println(Calendar.getInstance().getTime.getTime)
 }
 
