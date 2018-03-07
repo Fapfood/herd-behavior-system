@@ -10,11 +10,11 @@ import poc.modifier.{Follower, Leader}
 
 object Ant {
 
-  def props(map: Map, x: Int, y: Int): Props = Props(new Ant(map, x, y))
+  def props(x: Int, y: Int): Props = Props(new Ant(x, y))
 
 }
 
-class Ant(val map: Map, var x: Int, var y: Int) extends Actor with broadcastLeadership {
+class Ant(var x: Int, var y: Int) extends Actor with broadcastLeadership {
 
   override def receive: Receive = {
     case leaderRising: LeaderRising =>
