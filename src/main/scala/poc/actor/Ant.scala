@@ -3,10 +3,11 @@ package poc.actor
 import java.util.Calendar
 
 import akka.actor.Props
-import poc.Map
 import poc.decision.broadcastLeadership
-import poc.message.{DecisionTime, LeaderOccurrence, LeaderRising, ShareModifiers}
+import poc.message.{DecisionTime, LeaderOccurrence, LeaderRising}
 import poc.modifier.{Follower, Leader}
+import poc.stage.actor.Map
+import poc.stage.message.ShareModifiers
 
 object Ant {
 
@@ -30,8 +31,6 @@ class Ant(var x: Int, var y: Int) extends Actor with broadcastLeadership {
     case decisionTime: DecisionTime =>
       this.decide
     //      print("decisionTime")
-    case shareModifiers: ShareModifiers =>
-      sender() !
   }
 
   def decide: Unit = {
